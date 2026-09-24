@@ -130,7 +130,7 @@ private struct DeviceCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
             HStack(spacing: 13) {
-                DeviceGlyph(kind: device.kind, size: 48).opacity(device.isOnline ? 1 : 0.5)
+                DeviceGlyph(kind: device.displayKind, size: 48).opacity(device.isOnline ? 1 : 0.5)
                 VStack(alignment: .leading, spacing: 5) {
                     HStack(spacing: 7) {
                         Text(device.displayName).font(.system(size: 14, weight: .semibold)).lineLimit(1)
@@ -142,8 +142,13 @@ private struct DeviceCard: View {
                     }.font(.system(size: 10)).foregroundStyle(LoomTheme.secondaryText)
                 }
                 Spacer()
-                Image(systemName: device.isTrusted ? "checkmark.shield.fill" : "shield")
-                    .foregroundStyle(device.isTrusted ? LoomTheme.green : LoomTheme.secondaryText)
+                VStack(alignment: .trailing, spacing: 4) {
+                    Image(systemName: device.isTrusted ? "checkmark.shield.fill" : "shield")
+                        .foregroundStyle(device.isTrusted ? LoomTheme.green : LoomTheme.secondaryText)
+                    Text(device.isTrusted ? "Trusted" : "Needs Review")
+                        .font(.system(size: 9, weight: .medium))
+                        .foregroundStyle(device.isTrusted ? LoomTheme.green : LoomTheme.secondaryText)
+                }
             }
             Grid(alignment: .leading, horizontalSpacing: 14, verticalSpacing: 8) {
                 GridRow { label("IP"); value(device.ipAddress) }
@@ -229,7 +234,7 @@ struct ActivitySectionView: View {
                                     scanner.selectedDevice = device
                                 }
                             } label: { HStack(spacing: 14) {
-                                DeviceGlyph(kind: event.kind, size: 38)
+                                DeviceGlyph(kind: activityDeviceKind(event), size: 38)
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(activityDeviceName(event)).font(.system(size: 13, weight: .semibold))
                                     Text(activityDetail(event)).font(.system(size: 11)).foregroundStyle(LoomTheme.secondaryText)
@@ -251,6 +256,12 @@ struct ActivitySectionView: View {
         guard let id = event.deviceID,
               let device = scanner.devices.first(where: { $0.id == id }) else { return event.title }
         return device.displayName
+    }
+
+    private func activityDeviceKind(_ event: ActivityItem) -> DeviceKind {
+        guard let id = event.deviceID,
+              let device = scanner.devices.first(where: { $0.id == id }) else { return event.kind }
+        return device.displayKind
     }
 
     private func activityDetail(_ event: ActivityItem) -> String {
@@ -297,7 +308,7 @@ struct ServicesSectionView: View {
                                     let device = entry.0
                                     let service = entry.1
                                     HStack(spacing: 12) {
-                                        DeviceGlyph(kind: device.kind, size: 32)
+                                        DeviceGlyph(kind: device.displayKind, size: 32)
                                         VStack(alignment: .leading, spacing: 3) {
                                             Text(device.displayName).font(.system(size: 12, weight: .medium))
                                             Text([device.ipAddress, service.port.map { "port \($0)" }].compactMap { $0 }.joined(separator: " · "))
@@ -333,25 +344,40 @@ struct SecuritySectionView: View {
         VStack(spacing: 18) {
             SectionHeader(title: "Security", subtitle: "An observational LAN overview—not vulnerability or antivirus scanning.")
             HStack(spacing: 14) {
-                summary("\(untrusted.count)", "Unknown / untrusted", .orange, "questionmark.shield")
+                summary("\(untrusted.count)", "Needs Review", .orange, "questionmark.shield")
                 summary("\(scanner.devices.filter { !$0.serviceObservations.isEmpty }.count)", "Devices with services", .cyan, "network")
                 summary("\(scanner.devices.filter(\.isTrusted).count)", "Trusted", LoomTheme.green, "checkmark.shield")
             }
             ScrollView {
                 LazyVStack(spacing: 12) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Needs Review").font(.system(size: 16, weight: .semibold))
+                            Text("New or untrusted devices are not necessarily unsafe; they have not been marked as yours yet.")
+                                .font(.system(size: 10)).foregroundStyle(LoomTheme.secondaryText)
+                        }
+                        Spacer()
+                    }.padding(.horizontal, 4)
                     ForEach(untrusted) { device in
                         finding(icon: "questionmark.shield", color: .orange,
-                                title: device.isNew ? "New device is not trusted" : "Device is not marked as trusted",
+                                title: device.isNew ? "New device · needs review" : "Untrusted / Needs Review",
                                 detail: "\(device.displayName) · \(device.ipAddress)", device: device)
                     }
+                    if untrusted.isEmpty {
+                        Label("No devices currently need review", systemImage: "checkmark.shield.fill")
+                            .foregroundStyle(LoomTheme.green).padding(18).frame(maxWidth: .infinity, alignment: .leading)
+                            .glassCard(radius: 15)
+                    }
+                    HStack { Text("Observed Local Services").font(.system(size: 16, weight: .semibold)); Spacer() }
+                        .padding(.horizontal, 4).padding(.top, 6)
                     ForEach(scanner.devices.filter { !$0.serviceObservations.isEmpty }) { device in
                         finding(icon: "network", color: .cyan,
                                 title: "Local services are reachable or advertised",
                                 detail: "\(device.displayName): \(device.serviceObservations.map(\.name).uniqued().joined(separator: ", "))",
                                 device: device)
                     }
-                    if untrusted.isEmpty && scanner.devices.allSatisfy({ $0.serviceObservations.isEmpty }) {
-                        Text("No current observational findings. This does not represent a vulnerability scan.")
+                    if scanner.devices.allSatisfy({ $0.serviceObservations.isEmpty }) {
+                        Text("No local services have been observed. This does not represent a vulnerability scan.")
                             .font(.system(size: 12)).foregroundStyle(LoomTheme.secondaryText).padding(24).glassCard()
                     }
                 }.padding(2)
@@ -440,12 +466,7 @@ struct DeviceInspectorView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var scanner: NetworkScanner
     let device: NetworkDevice
-    @State private var customName: String
-
-    init(device: NetworkDevice) {
-        self.device = device
-        _customName = State(initialValue: device.customName ?? "")
-    }
+    @State private var showsCustomization = false
 
     private var current: NetworkDevice { scanner.devices.first(where: { $0.id == device.id }) ?? device }
 
@@ -455,7 +476,10 @@ struct DeviceInspectorView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     HStack(spacing: 15) {
-                        DeviceGlyph(kind: current.kind, size: 68).opacity(current.isOnline ? 1 : 0.55)
+                        ZStack(alignment: .bottomTrailing) {
+                            DeviceGlyph(kind: current.displayKind, size: 68).opacity(current.isOnline ? 1 : 0.55)
+                            if current.isTrusted { TrustedShieldBadge(size: 20) }
+                        }
                         VStack(alignment: .leading, spacing: 6) {
                             HStack { Text(current.displayName).font(.system(size: 23, weight: .bold)); if current.isNew { Text("NEW").font(.caption2.bold()).foregroundStyle(.orange) } }
                             HStack(spacing: 7) { StatusDot(color: current.isOnline ? LoomTheme.green : .gray); Text(current.isOnline ? "Online" : "Offline") }
@@ -469,34 +493,25 @@ struct DeviceInspectorView: View {
                         .help("Close")
                     }
                     HStack {
-                        Button(current.isTrusted ? "Mark as Unknown" : "Mark as Trusted") { scanner.toggleTrusted(current) }
+                        Button(current.isTrusted ? "Mark as Needs Review" : "Mark as Trusted") { scanner.toggleTrusted(current) }
                             .buttonStyle(.borderedProminent).tint(current.isTrusted ? .gray : .blue)
+                        Button("Customize Device") { showsCustomization = true }.buttonStyle(.bordered)
                         Button(scanner.inspectionDeviceID == current.id ? "Inspecting…" : "Inspect Common Ports") {
                             scanner.inspectCommonPorts(on: current)
                         }.buttonStyle(.bordered).disabled(!current.isOnline || scanner.inspectionDeviceID != nil)
                         Spacer()
                     }
-                    VStack(alignment: .leading, spacing: 11) {
-                        Text("Device Name").font(.system(size: 14, weight: .semibold))
-                        HStack(spacing: 10) {
-                            TextField("Add a friendly name", text: $customName)
-                                .textFieldStyle(.plain)
-                                .padding(.horizontal, 12).frame(height: 36)
-                                .background(RoundedRectangle(cornerRadius: 9).fill(Color.black.opacity(0.15))
-                                    .overlay(RoundedRectangle(cornerRadius: 9).stroke(LoomTheme.stroke)))
-                                .onSubmit { saveName() }
-                            Button("Save Name") { saveName() }
-                                .buttonStyle(.borderedProminent)
-                                .disabled(customName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                            if current.customName != nil {
-                                Button("Restore Detected Name") {
-                                    customName = ""
-                                    scanner.renameDevice(current, customName: nil)
-                                }.buttonStyle(.bordered)
-                            }
+                    HStack(spacing: 18) {
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text("Customization").font(.system(size: 14, weight: .semibold))
+                            Text(current.customName ?? "Automatic name: \(current.automaticDisplayName)")
+                                .font(.system(size: 11)).foregroundStyle(LoomTheme.secondaryText)
+                            Text(current.customKind.map { "Custom category: \($0.categoryLabel)" }
+                                 ?? "Automatic category: \(current.detectedKindLabel)")
+                                .font(.system(size: 11)).foregroundStyle(LoomTheme.secondaryText)
                         }
-                        Text("Detected as \(current.detectedName). Your custom name follows this device identity when a MAC address is available.")
-                            .font(.system(size: 10)).foregroundStyle(LoomTheme.secondaryText)
+                        Spacer()
+                        Button("Customize…") { showsCustomization = true }.buttonStyle(.borderedProminent)
                     }.padding(16).glassCard(radius: 15)
                     VStack(spacing: 0) {
                         detail("Detected Name", current.detectedName)
@@ -505,8 +520,9 @@ struct DeviceInspectorView: View {
                         detail("MAC Type", current.macTypeLabel)
                         detail("Vendor", current.vendorLabel)
                         detail("Hostname", current.hostname ?? "Unavailable")
-                        detail("Device Type", current.kind.rawValue.capitalized)
-                        detail("Trust", current.isTrusted ? "Trusted" : "Untrusted")
+                        detail("Detected Type", current.detectedKindLabel)
+                        detail("Displayed Category", current.displayKindLabel)
+                        detail("Trust", current.isTrusted ? "Trusted" : "Untrusted / Needs Review")
                         detail("Latency", current.latencyMS.map { "\($0) ms" } ?? "Unavailable")
                         detail("First Seen", current.firstSeen.formatted(date: .abbreviated, time: .shortened))
                         detail("Last Seen", current.lastSeen.formatted(date: .abbreviated, time: .shortened))
@@ -531,18 +547,93 @@ struct DeviceInspectorView: View {
                 }.padding(26)
             }.scrollIndicators(.hidden)
         }.frame(width: 650, height: 760)
-        .onChange(of: current.customName) { _, value in customName = value ?? "" }
-    }
-
-    private func saveName() {
-        scanner.renameDevice(current, customName: customName)
-        customName = current.customName ?? customName.trimmingCharacters(in: .whitespacesAndNewlines)
+        .sheet(isPresented: $showsCustomization) {
+            DeviceCustomizationView(device: current).environmentObject(scanner)
+        }
     }
 
     private func detail(_ label: String, _ value: String) -> some View {
         HStack { Text(label).foregroundStyle(LoomTheme.secondaryText); Spacer(); Text(value).lineLimit(1).textSelection(.enabled) }
             .font(.system(size: 12)).padding(.horizontal, 15).frame(height: 42)
             .overlay(alignment: .bottom) { Rectangle().fill(Color.white.opacity(0.06)).frame(height: 1) }
+    }
+}
+
+struct DeviceCustomizationView: View {
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var scanner: NetworkScanner
+    let device: NetworkDevice
+    @State private var customName: String
+    @State private var customKind: DeviceKind?
+    @State private var isTrusted: Bool
+
+    init(device: NetworkDevice) {
+        self.device = device
+        _customName = State(initialValue: device.customName ?? "")
+        _customKind = State(initialValue: device.customKind)
+        _isTrusted = State(initialValue: device.isTrusted)
+    }
+
+    private var current: NetworkDevice { scanner.devices.first(where: { $0.id == device.id }) ?? device }
+
+    var body: some View {
+        ZStack {
+            AppBackground()
+            VStack(spacing: 18) {
+                HStack(spacing: 14) {
+                    DeviceGlyph(kind: customKind ?? current.kind, size: 54)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Customize Device").font(.system(size: 21, weight: .bold))
+                        Text("Automatic detection remains preserved underneath your choices.")
+                            .font(.system(size: 11)).foregroundStyle(LoomTheme.secondaryText)
+                    }
+                    Spacer()
+                    Button { dismiss() } label: { Image(systemName: "xmark.circle.fill").font(.title2) }
+                        .buttonStyle(LoomHoverButtonStyle(cornerRadius: 18, fillOpacity: 0.1, hoverScale: 1.08))
+                }
+
+                VStack(alignment: .leading, spacing: 9) {
+                    Text("Friendly Name").font(.system(size: 13, weight: .semibold))
+                    TextField("Use automatic name", text: $customName).textFieldStyle(.roundedBorder)
+                    Text("Automatic: \(current.automaticDisplayName)")
+                        .font(.system(size: 10)).foregroundStyle(LoomTheme.secondaryText)
+                }.padding(15).glassCard(radius: 14)
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Device Category").font(.system(size: 13, weight: .semibold))
+                    Picker("Category", selection: $customKind) {
+                        Text("Automatic — \(current.detectedKindLabel)").tag(DeviceKind?.none)
+                        ForEach(DeviceKind.customizationOptions, id: \.self) { kind in
+                            Label(kind.categoryLabel, systemImage: kind.symbol).tag(DeviceKind?.some(kind))
+                        }
+                    }.labelsHidden().frame(maxWidth: .infinity)
+                    Text("Automatic detection is not overwritten when a custom category is selected.")
+                        .font(.system(size: 10)).foregroundStyle(LoomTheme.secondaryText)
+                }.padding(15).glassCard(radius: 14)
+
+                Toggle(isOn: $isTrusted) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Trusted Device").font(.system(size: 13, weight: .semibold))
+                        Text("Off means this device still needs your review—not that it is malicious.")
+                            .font(.system(size: 10)).foregroundStyle(LoomTheme.secondaryText)
+                    }
+                }.toggleStyle(.switch).padding(15).glassCard(radius: 14)
+
+                HStack {
+                    Button("Reset Name & Category") {
+                        customName = ""
+                        customKind = nil
+                    }.buttonStyle(.bordered)
+                    Spacer()
+                    Button("Cancel") { dismiss() }.buttonStyle(.bordered)
+                    Button("Save Changes") {
+                        scanner.customizeDevice(current, customName: customName,
+                                                customKind: customKind, isTrusted: isTrusted)
+                        dismiss()
+                    }.buttonStyle(.borderedProminent)
+                }
+            }.padding(24)
+        }.frame(width: 540, height: 570)
     }
 }
 

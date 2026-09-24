@@ -2,11 +2,13 @@ import Foundation
 import SwiftUI
 
 enum DeviceKind: String, Codable, CaseIterable {
-    case computer, phone, tablet, television, speaker, printer, router, smartHome, gameConsole, unknown
+    case computer, laptop, desktop, phone, tablet, television, speaker, printer, router, smartHome
+    case gameConsole, nasServer, wearable, unknown
 
     var symbol: String {
         switch self {
-        case .computer: "laptopcomputer"
+        case .computer, .laptop: "laptopcomputer"
+        case .desktop: "desktopcomputer"
         case .phone: "iphone"
         case .tablet: "ipad"
         case .television: "tv"
@@ -15,6 +17,8 @@ enum DeviceKind: String, Codable, CaseIterable {
         case .router: "wifi.router"
         case .smartHome: "lightbulb.led"
         case .gameConsole: "gamecontroller"
+        case .nasServer: "externaldrive.connected.to.line.below"
+        case .wearable: "applewatch"
         case .unknown: "network"
         }
     }
@@ -23,11 +27,35 @@ enum DeviceKind: String, Codable, CaseIterable {
         switch self {
         case .router: .cyan
         case .unknown: .orange
-        case .phone, .tablet: Color(red: 0.30, green: 0.75, blue: 1)
+        case .phone, .tablet, .wearable: Color(red: 0.30, green: 0.75, blue: 1)
         case .smartHome: .yellow
         default: Color(red: 0.49, green: 0.58, blue: 1)
         }
     }
+
+    var categoryLabel: String {
+        switch self {
+        case .computer: "Computer"
+        case .laptop: "Laptop"
+        case .desktop: "Desktop"
+        case .phone: "Phone"
+        case .tablet: "Tablet"
+        case .television: "Television"
+        case .speaker: "Speaker / Audio"
+        case .printer: "Printer"
+        case .router: "Router / Network Device"
+        case .smartHome: "Smart Home / IoT"
+        case .gameConsole: "Game Console"
+        case .nasServer: "NAS / Server"
+        case .wearable: "Wearable"
+        case .unknown: "Other / Unknown"
+        }
+    }
+
+    static let customizationOptions: [DeviceKind] = [
+        .phone, .tablet, .laptop, .desktop, .television, .gameConsole, .router,
+        .smartHome, .printer, .nasServer, .wearable, .unknown
+    ]
 }
 
 enum ServiceEvidence: String, Codable, CaseIterable {
@@ -67,7 +95,9 @@ struct NetworkDevice: Identifiable, Equatable, Codable {
     var macAddress: String?
     var vendor: String?
     var hostname: String?
+    /// Automatically detected category. Never overwritten by user customization.
     var kind: DeviceKind
+    var customKind: DeviceKind?
     var services: Set<String>
     var serviceObservations: [NetworkServiceObservation]
     var latencyMS: Int?
@@ -82,6 +112,7 @@ struct NetworkDevice: Identifiable, Equatable, Codable {
     init(id: String = UUID().uuidString, name: String, customName: String? = nil,
          ipAddress: String, macAddress: String? = nil,
          vendor: String? = nil, hostname: String? = nil, kind: DeviceKind = .unknown,
+         customKind: DeviceKind? = nil,
          services: Set<String> = [], serviceObservations: [NetworkServiceObservation] = [],
          latencyMS: Int? = nil, firstSeen: Date = .now, lastSeen: Date = .now,
          isOnline: Bool = true, isNew: Bool = true, isTrusted: Bool = false,
@@ -94,6 +125,7 @@ struct NetworkDevice: Identifiable, Equatable, Codable {
         self.vendor = vendor
         self.hostname = hostname
         self.kind = kind
+        self.customKind = customKind
         self.services = services
         self.serviceObservations = serviceObservations
         self.latencyMS = latencyMS
@@ -108,11 +140,34 @@ struct NetworkDevice: Identifiable, Equatable, Codable {
 
     var displayName: String {
         let preferred = customName?.trimmingCharacters(in: .whitespacesAndNewlines)
-        let base = preferred?.isEmpty == false ? preferred! : (isGateway ? "Home Wi-Fi" : name)
+        let base = preferred?.isEmpty == false ? preferred! : automaticDisplayName
         return isLocal ? "\(base) (You)" : base
     }
 
-    var detectedName: String { isGateway && name == "Home Wi-Fi" ? "Gateway" : name }
+    var automaticDisplayName: String {
+        if isMeaningfulDetectedName(name) { return name }
+        if let hostname, !hostname.isEmpty {
+            let friendly = DeviceClassifier.friendlyName(hostname: hostname, ip: ipAddress)
+            if isMeaningfulDetectedName(friendly) { return friendly }
+        }
+        if let last = ipAddress.split(separator: ".").last, Int(last) != nil { return "Device \(last)" }
+        return "Unknown Device"
+    }
+
+    var detectedName: String {
+        if isMeaningfulDetectedName(name) { return name }
+        if let hostname, !hostname.isEmpty { return hostname }
+        return "Unavailable"
+    }
+
+    var displayKind: DeviceKind { customKind ?? kind }
+    var detectedKindLabel: String { kind == .unknown ? "Unknown" : kind.categoryLabel }
+    var displayKindLabel: String { displayKind == .unknown ? "Unknown" : displayKind.categoryLabel }
+
+    private func isMeaningfulDetectedName(_ value: String) -> Bool {
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        return !trimmed.isEmpty && trimmed != "Unknown Device" && !trimmed.hasPrefix("Device ")
+    }
 
     var connectionLabel: String {
         if isLocal { return "This Mac" }

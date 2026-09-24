@@ -226,6 +226,26 @@ final class NetworkScanner: ObservableObject {
         schedulePersistence()
     }
 
+    func customizeDevice(_ device: NetworkDevice, customName: String?, customKind: DeviceKind?,
+                         isTrusted: Bool) {
+        guard let index = devices.firstIndex(where: { $0.id == device.id }) else { return }
+        let trimmed = customName?.trimmingCharacters(in: .whitespacesAndNewlines)
+        devices[index].customName = trimmed?.isEmpty == false ? trimmed : nil
+        devices[index].customKind = customKind
+        devices[index].isTrusted = isTrusted
+        if isTrusted { devices[index].isNew = false }
+        if selectedDevice?.id == device.id { selectedDevice = devices[index] }
+        schedulePersistence()
+    }
+
+    func resetDeviceCustomization(_ device: NetworkDevice) {
+        guard let index = devices.firstIndex(where: { $0.id == device.id }) else { return }
+        devices[index].customName = nil
+        devices[index].customKind = nil
+        if selectedDevice?.id == device.id { selectedDevice = devices[index] }
+        schedulePersistence()
+    }
+
     func clearDeviceHistory() {
         devices.removeAll()
         selectedDevice = nil
@@ -1024,11 +1044,14 @@ enum NetworkProbe {
             try process.run()
         } catch {
             DiscoveryTrace.record("neighbor/ARP command attempted=false reason=launch failed detail=\(error.localizedDescription)")
-            return []
+            // The native routing table is authoritative on its own. A restricted
+            // subprocess environment must not discard neighbors already observed
+            // directly from the kernel.
+            return native
         }
         process.waitUntilExit()
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        guard let text = String(data: data, encoding: .utf8) else { return [] }
+        guard let text = String(data: data, encoding: .utf8) else { return native }
         let neighbors = parseARPTable(text)
         DiscoveryTrace.record("neighbor/ARP command attempted=true exit=\(process.terminationStatus) parsed=\(neighbors.count) native=\(native.count)")
         if process.terminationStatus != 0 {

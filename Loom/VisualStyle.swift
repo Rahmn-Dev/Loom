@@ -99,6 +99,22 @@ struct StatusDot: View {
     }
 }
 
+struct TrustedShieldBadge: View {
+    var size: CGFloat = 17
+    var body: some View {
+        ZStack {
+            Circle().fill(Color(red: 0.035, green: 0.085, blue: 0.16))
+                .overlay(Circle().stroke(LoomTheme.green.opacity(0.55), lineWidth: 0.7))
+            Image(systemName: "checkmark.shield.fill")
+                .font(.system(size: size * 0.58, weight: .semibold))
+                .foregroundStyle(LoomTheme.green)
+        }
+        .frame(width: size, height: size)
+        .shadow(color: LoomTheme.green.opacity(0.22), radius: 3)
+        .accessibilityLabel("Trusted device")
+    }
+}
+
 struct DeviceGlyph: View {
     let kind: DeviceKind
     var size: CGFloat = 44

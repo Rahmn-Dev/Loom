@@ -7,11 +7,14 @@ enum DeviceClassifier {
         let haystack = ([name] + services.map { $0 }).joined(separator: " ").lowercased()
         if contains(haystack, ["iphone", "android", "phone"]) { return .phone }
         if contains(haystack, ["ipad", "tablet"]) { return .tablet }
-        if contains(haystack, ["macbook", "imac", "mac-mini", "desktop", "laptop", "pc-"]) { return .computer }
+        if contains(haystack, ["macbook", "laptop", "notebook"]) { return .laptop }
+        if contains(haystack, ["imac", "mac-mini", "mac mini", "desktop", "workstation", "pc-"]) { return .desktop }
         if contains(haystack, ["appletv", "apple tv", "chromecast", "googlecast", "television", "smart-tv", "tv-"]) { return .television }
         if contains(haystack, ["homepod", "speaker", "sonos", "raop", "airplay"]) { return .speaker }
         if contains(haystack, ["printer", "ipp", "epson", "canon", "brother", "hp-"]) { return .printer }
         if contains(haystack, ["playstation", "xbox", "nintendo", "console"]) { return .gameConsole }
+        if contains(haystack, ["nas", "synology", "qnap", "truenas", "server"]) { return .nasServer }
+        if contains(haystack, ["apple watch", "applewatch", "wearable", "smartwatch"]) { return .wearable }
         if contains(haystack, ["hue", "homekit", "_hap", "light", "nest", "camera", "iot"]) { return .smartHome }
         if contains(haystack, ["router", "gateway", "access-point"]) { return .router }
         return .unknown

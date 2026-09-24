@@ -101,15 +101,51 @@ final class DeviceClassifierTests: XCTestCase {
 
     func testCustomNameIsSeparateAndSurvivesPersistence() throws {
         let device = NetworkDevice(name: "iphone-14.local", customName: "iPhone Ibu",
-                                   ipAddress: "192.168.1.30", macAddress: "02:AA:BB:CC:DD:EE")
+                                   ipAddress: "192.168.1.30", macAddress: "02:AA:BB:CC:DD:EE",
+                                   kind: .phone, customKind: .tablet, isTrusted: true)
         XCTAssertEqual(device.detectedName, "iphone-14.local")
         XCTAssertEqual(device.displayName, "iPhone Ibu")
+        XCTAssertEqual(device.kind, .phone)
+        XCTAssertEqual(device.displayKind, .tablet)
 
         let data = try JSONEncoder().encode(device)
         let decoded = try JSONDecoder().decode(NetworkDevice.self, from: data)
         XCTAssertEqual(decoded.customName, "iPhone Ibu")
         XCTAssertEqual(decoded.name, "iphone-14.local")
         XCTAssertEqual(decoded.displayName, "iPhone Ibu")
+        XCTAssertEqual(decoded.macAddress, "02:AA:BB:CC:DD:EE")
+        XCTAssertEqual(decoded.kind, .phone)
+        XCTAssertEqual(decoded.customKind, .tablet)
+        XCTAssertEqual(decoded.displayKind, .tablet)
+        XCTAssertTrue(decoded.isTrusted)
+    }
+
+    func testDisplayNamePriorityUsesCustomizationThenDetectedNameThenHostnameThenIP() {
+        let custom = NetworkDevice(name: "Living Room TV", customName: "TV Ruang Tengah",
+                                   ipAddress: "192.168.1.12", hostname: "television.local")
+        XCTAssertEqual(custom.displayName, "TV Ruang Tengah")
+
+        let detected = NetworkDevice(name: "Living Room TV", ipAddress: "192.168.1.13",
+                                     hostname: "television.local")
+        XCTAssertEqual(detected.displayName, "Living Room TV")
+
+        let hostname = NetworkDevice(name: "Unknown Device", ipAddress: "192.168.1.14",
+                                     hostname: "rahman-macbook.local.")
+        XCTAssertEqual(hostname.displayName, "rahman macbook")
+
+        let fallback = NetworkDevice(name: "Unknown Device", ipAddress: "192.168.1.15")
+        XCTAssertEqual(fallback.displayName, "Device 15")
+    }
+
+    func testCustomCategoryDoesNotOverwriteDetectedCategory() {
+        var device = NetworkDevice(name: "Media device", ipAddress: "192.168.1.16",
+                                   kind: .television, customKind: .gameConsole)
+        XCTAssertEqual(device.displayKind, .gameConsole)
+        XCTAssertEqual(device.detectedKindLabel, "Television")
+
+        device.customKind = nil
+        XCTAssertEqual(device.kind, .television)
+        XCTAssertEqual(device.displayKind, .television)
     }
 
     func testMACIdentitySurvivesIPAddressChange() {

@@ -69,7 +69,7 @@ struct RightPanelView: View {
             } else {
                 ForEach(scanner.activities.prefix(4)) { item in
                     HStack(spacing: 10) {
-                        DeviceGlyph(kind: item.kind, size: 34)
+                        DeviceGlyph(kind: activityDeviceKind(item), size: 34)
                         VStack(alignment: .leading, spacing: 3) {
                             Text(activityDeviceName(item)).font(.system(size: 12, weight: .medium))
                             Text(activityDetail(item)).font(.system(size: 10)).foregroundStyle(LoomTheme.secondaryText).lineLimit(1)
@@ -84,7 +84,7 @@ struct RightPanelView: View {
     private var securityCard: some View {
         VStack(alignment: .leading, spacing: 13) {
             HStack { Text("Network Security").font(.system(size: 14, weight: .semibold)); Spacer(); Image(systemName: "chevron.right").font(.caption) }
-            securityLine("\(scanner.devices.filter { !$0.isTrusted && !$0.isLocal && !$0.isGateway }.count) untrusted devices",
+            securityLine("\(scanner.devices.filter { !$0.isTrusted && !$0.isLocal && !$0.isGateway }.count) devices need review",
                          icon: "questionmark.shield.fill", color: .orange)
             securityLine("\(scanner.devices.flatMap(\.serviceObservations).count) service observations",
                          icon: "network", color: .cyan)
@@ -103,6 +103,12 @@ struct RightPanelView: View {
         guard let id = item.deviceID,
               let device = scanner.devices.first(where: { $0.id == id }) else { return item.title }
         return device.displayName
+    }
+
+    private func activityDeviceKind(_ item: ActivityItem) -> DeviceKind {
+        guard let id = item.deviceID,
+              let device = scanner.devices.first(where: { $0.id == id }) else { return item.kind }
+        return device.displayKind
     }
 
     private func activityDetail(_ item: ActivityItem) -> String {

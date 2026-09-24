@@ -66,7 +66,10 @@ struct DeviceTableView: View {
         Button { scanner.selectedDevice = device } label: {
             HStack(spacing: 0) {
                 HStack(spacing: 9) {
-                    DeviceGlyph(kind: device.kind, size: 25)
+                    ZStack(alignment: .bottomTrailing) {
+                        DeviceGlyph(kind: device.displayKind, size: 25)
+                        if device.isTrusted { TrustedShieldBadge(size: 12) }
+                    }
                     Text(device.displayName).lineLimit(1)
                 }.frame(width: deviceColumnWidth(for: width), alignment: .leading)
                 if width >= 460 {
@@ -76,7 +79,7 @@ struct DeviceTableView: View {
                     Text(device.formattedMACAddress ?? "—").frame(width: 145, alignment: .leading).foregroundStyle(LoomTheme.secondaryText)
                 }
                 if width >= 590 {
-                    Text(device.kind.rawValue.capitalized).frame(width: 95, alignment: .leading).foregroundStyle(LoomTheme.secondaryText)
+                    Text(device.displayKindLabel).frame(width: 95, alignment: .leading).foregroundStyle(LoomTheme.secondaryText)
                 }
                 if width >= 730 {
                     HStack(spacing: 7) {
