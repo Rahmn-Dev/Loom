@@ -1,0 +1,41 @@
+name: Loom
+options:
+  bundleIdPrefix: com.loom
+  deploymentTarget:
+    macOS: "14.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+targets:
+  Loom:
+    type: application
+    platform: macOS
+    sources:
+      - path: Loom
+    settings:
+      base:
+        PRODUCT_NAME: Loom
+        PRODUCT_BUNDLE_IDENTIFIER: com.loom.networkscanner
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Loom/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Loom/Loom.entitlements
+        ENABLE_APP_SANDBOX: NO
+        CODE_SIGN_STYLE: Automatic
+        COMBINE_HIDPI_IMAGES: YES
+    scheme:
+      testTargets:
+        - LoomTests
+  LoomTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: LoomTests
+    dependencies:
+      - target: Loom
+    settings:
+      base:
+        PRODUCT_NAME: LoomTests
+        PRODUCT_MODULE_NAME: LoomTests
+        PRODUCT_BUNDLE_IDENTIFIER: com.loom.networkscanner.tests
+        GENERATE_INFOPLIST_FILE: YES

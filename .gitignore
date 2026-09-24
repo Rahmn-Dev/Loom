@@ -1,0 +1,7 @@
+work/DerivedData/
+work/TestDerivedData/
+work/ReleaseDerivedData/
+*.xcuserstate
+xcuserdata/
+.DS_Store
+

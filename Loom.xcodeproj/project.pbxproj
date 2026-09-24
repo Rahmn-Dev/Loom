@@ -1,0 +1,444 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1662899A78ABD8E817A9005C /* NetworkScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F46C99E031A31048877FF11 /* NetworkScanner.swift */; };
+		1CBF371BE07965965AC8A587 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEB921EE9D6747D33416CAB /* Models.swift */; };
+		37390585482C1A263802D5A4 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08CA250E7622E9644ADA159 /* DashboardView.swift */; };
+		374A62C02754B23FA2345B30 /* DeviceTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26A55FE2A4A7ED1107DF19A2 /* DeviceTableView.swift */; };
+		459D899425D6D2FCC6995CC0 /* VisualStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A6583E66282F183C3F09348 /* VisualStyle.swift */; };
+		70C858BEE5B96265747224D0 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E411C941841507DE47834AD1 /* Persistence.swift */; };
+		A01801A406C6F6452A9021D9 /* RightPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C23792C51E520851E032 /* RightPanelView.swift */; };
+		B1B6E957668F0191173780A9 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9342947D0A88501C2D1B360 /* SidebarView.swift */; };
+		BFBA0EA4C84029F36C1BA7A6 /* DeviceClassifierTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E6A7B5BA1699B4FB80FCFE /* DeviceClassifierTests.swift */; };
+		EAFBFE238E5F601B03DACD79 /* AppSectionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EEF3E8088B49C1F0B1BD24 /* AppSectionsView.swift */; };
+		F84ECFD02F3452E43B096627 /* DeviceClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C5453EFD5A3BB7B6AD0FCF /* DeviceClassifier.swift */; };
+		F9C98D26358CFAE8345B59B9 /* LoomApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412AA912F72FEB53687A27B8 /* LoomApp.swift */; };
+		FEF09CE3F1A45010BEB6C727 /* NetworkMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4825954699EC081C574798 /* NetworkMapView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C9D08863B97F9676FE553444 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 32B58EFB3FEA3E3E81D94DBD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 92B1BC83B42A8E6DA14FE2C3;
+			remoteInfo = Loom;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		26A55FE2A4A7ED1107DF19A2 /* DeviceTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTableView.swift; sourceTree = "<group>"; };
+		412AA912F72FEB53687A27B8 /* LoomApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoomApp.swift; sourceTree = "<group>"; };
+		4516AEB75C15BFDA1D7DDB62 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		50E6A7B5BA1699B4FB80FCFE /* DeviceClassifierTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceClassifierTests.swift; sourceTree = "<group>"; };
+		5A6583E66282F183C3F09348 /* VisualStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualStyle.swift; sourceTree = "<group>"; };
+		70E7C23792C51E520851E032 /* RightPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RightPanelView.swift; sourceTree = "<group>"; };
+		7F46C99E031A31048877FF11 /* NetworkScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkScanner.swift; sourceTree = "<group>"; };
+		8B62A3B00A8A4F40F3F2A92A /* Loom.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Loom.entitlements; sourceTree = "<group>"; };
+		8D4825954699EC081C574798 /* NetworkMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMapView.swift; sourceTree = "<group>"; };
+		965174FB87136638BA643B4C /* LoomTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LoomTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9BEB921EE9D6747D33416CAB /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		B08CA250E7622E9644ADA159 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		B7EEF3E8088B49C1F0B1BD24 /* AppSectionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSectionsView.swift; sourceTree = "<group>"; };
+		B9342947D0A88501C2D1B360 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		CFB0FB42BDCFD78AC68A01BF /* Loom.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Loom.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2C5453EFD5A3BB7B6AD0FCF /* DeviceClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceClassifier.swift; sourceTree = "<group>"; };
+		E411C941841507DE47834AD1 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		1DEF40AC53620C93C6DE498D /* LoomTests */ = {
+			isa = PBXGroup;
+			children = (
+				50E6A7B5BA1699B4FB80FCFE /* DeviceClassifierTests.swift */,
+			);
+			path = LoomTests;
+			sourceTree = "<group>";
+		};
+		AE2495C2DD7C4012BED6E594 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CFB0FB42BDCFD78AC68A01BF /* Loom.app */,
+				965174FB87136638BA643B4C /* LoomTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B380268C9C7FBB9A4D2886D6 = {
+			isa = PBXGroup;
+			children = (
+				B6CBFC678F4F052F89B3CA66 /* Loom */,
+				1DEF40AC53620C93C6DE498D /* LoomTests */,
+				AE2495C2DD7C4012BED6E594 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B6CBFC678F4F052F89B3CA66 /* Loom */ = {
+			isa = PBXGroup;
+			children = (
+				B7EEF3E8088B49C1F0B1BD24 /* AppSectionsView.swift */,
+				B08CA250E7622E9644ADA159 /* DashboardView.swift */,
+				E2C5453EFD5A3BB7B6AD0FCF /* DeviceClassifier.swift */,
+				26A55FE2A4A7ED1107DF19A2 /* DeviceTableView.swift */,
+				4516AEB75C15BFDA1D7DDB62 /* Info.plist */,
+				8B62A3B00A8A4F40F3F2A92A /* Loom.entitlements */,
+				412AA912F72FEB53687A27B8 /* LoomApp.swift */,
+				9BEB921EE9D6747D33416CAB /* Models.swift */,
+				8D4825954699EC081C574798 /* NetworkMapView.swift */,
+				7F46C99E031A31048877FF11 /* NetworkScanner.swift */,
+				E411C941841507DE47834AD1 /* Persistence.swift */,
+				70E7C23792C51E520851E032 /* RightPanelView.swift */,
+				B9342947D0A88501C2D1B360 /* SidebarView.swift */,
+				5A6583E66282F183C3F09348 /* VisualStyle.swift */,
+			);
+			path = Loom;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		92B1BC83B42A8E6DA14FE2C3 /* Loom */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A89C1ED79CFFB2D69BAF407A /* Build configuration list for PBXNativeTarget "Loom" */;
+			buildPhases = (
+				11E15E109E1D18FEFC194441 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Loom;
+			packageProductDependencies = (
+			);
+			productName = Loom;
+			productReference = CFB0FB42BDCFD78AC68A01BF /* Loom.app */;
+			productType = "com.apple.product-type.application";
+		};
+		ED826D576EF84C5DCAA12309 /* LoomTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CC7C822050D13A1780EA0563 /* Build configuration list for PBXNativeTarget "LoomTests" */;
+			buildPhases = (
+				5DF0A9639115211713D1BD94 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A3CD4F83D239141298BB1268 /* PBXTargetDependency */,
+			);
+			name = LoomTests;
+			packageProductDependencies = (
+			);
+			productName = LoomTests;
+			productReference = 965174FB87136638BA643B4C /* LoomTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		32B58EFB3FEA3E3E81D94DBD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					92B1BC83B42A8E6DA14FE2C3 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 8469BC710BBCEBFD6D40602E /* Build configuration list for PBXProject "Loom" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = B380268C9C7FBB9A4D2886D6;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = AE2495C2DD7C4012BED6E594 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				92B1BC83B42A8E6DA14FE2C3 /* Loom */,
+				ED826D576EF84C5DCAA12309 /* LoomTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		11E15E109E1D18FEFC194441 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EAFBFE238E5F601B03DACD79 /* AppSectionsView.swift in Sources */,
+				37390585482C1A263802D5A4 /* DashboardView.swift in Sources */,
+				F84ECFD02F3452E43B096627 /* DeviceClassifier.swift in Sources */,
+				374A62C02754B23FA2345B30 /* DeviceTableView.swift in Sources */,
+				F9C98D26358CFAE8345B59B9 /* LoomApp.swift in Sources */,
+				1CBF371BE07965965AC8A587 /* Models.swift in Sources */,
+				FEF09CE3F1A45010BEB6C727 /* NetworkMapView.swift in Sources */,
+				1662899A78ABD8E817A9005C /* NetworkScanner.swift in Sources */,
+				70C858BEE5B96265747224D0 /* Persistence.swift in Sources */,
+				A01801A406C6F6452A9021D9 /* RightPanelView.swift in Sources */,
+				B1B6E957668F0191173780A9 /* SidebarView.swift in Sources */,
+				459D899425D6D2FCC6995CC0 /* VisualStyle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF0A9639115211713D1BD94 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BFBA0EA4C84029F36C1BA7A6 /* DeviceClassifierTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A3CD4F83D239141298BB1268 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 92B1BC83B42A8E6DA14FE2C3 /* Loom */;
+			targetProxy = C9D08863B97F9676FE553444 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0597129A1260A66422EB504F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.loom.networkscanner.tests;
+				PRODUCT_MODULE_NAME = LoomTests;
+				PRODUCT_NAME = LoomTests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Loom.app/Contents/MacOS/Loom";
+			};
+			name = Debug;
+		};
+		126D55997EBF15956046E58F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Loom/Loom.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Loom/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.loom.networkscanner;
+				PRODUCT_NAME = Loom;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		7DDE0896E67F1B37B182DEA0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Loom/Loom.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_APP_SANDBOX = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Loom/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.loom.networkscanner;
+				PRODUCT_NAME = Loom;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		9B87305D26CB722F082E1419 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E1809DB765500FBFE9669DE4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		F0D3E0EDEB02B1F76B3E4C03 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.loom.networkscanner.tests;
+				PRODUCT_MODULE_NAME = LoomTests;
+				PRODUCT_NAME = LoomTests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Loom.app/Contents/MacOS/Loom";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8469BC710BBCEBFD6D40602E /* Build configuration list for PBXProject "Loom" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1809DB765500FBFE9669DE4 /* Debug */,
+				9B87305D26CB722F082E1419 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A89C1ED79CFFB2D69BAF407A /* Build configuration list for PBXNativeTarget "Loom" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7DDE0896E67F1B37B182DEA0 /* Debug */,
+				126D55997EBF15956046E58F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CC7C822050D13A1780EA0563 /* Build configuration list for PBXNativeTarget "LoomTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0597129A1260A66422EB504F /* Debug */,
+				F0D3E0EDEB02B1F76B3E4C03 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 32B58EFB3FEA3E3E81D94DBD /* Project object */;
+}
