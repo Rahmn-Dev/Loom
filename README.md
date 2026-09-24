@@ -1,49 +1,222 @@
-# Loom for macOS
 
-A native SwiftUI local-first network discovery and observability app inspired by the supplied Loom mockup. Loom starts scanning as soon as it opens and only displays devices, services, activity, and findings produced by real local observations. Production views contain no demo data.
+<p align="center">
+  <img width="128" height="128" alt="Loom-Icon-iOS-Default-128x128@2x" src="https://github.com/user-attachments/assets/77180c43-d911-4ca8-aea1-f14ce0a69388" />
+</p>
+<h1 align="center">Loom</h1>
 
-## Requirements
+**A beautiful, local-first network discovery and observability app for macOS.**
 
-- macOS 14 or newer
-- Xcode 16 or newer
-- Local Network permission (macOS asks on first launch)
+Loom automatically discovers devices on your local network, identifies them where possible, and continuously monitors their presence — entirely on your Mac.
 
-## Run
+<img width="1920" height="1280" alt="692_1x_shots_so" src="https://github.com/user-attachments/assets/d0bb2b38-f8ad-4f2f-91bb-7c4bdd0c3abb" />
 
-Open `Loom.xcodeproj`, select the **Loom** scheme, and press **Run**.
 
-On launch, Loom reads the IPv4 address and netmask of the default-route interface, calculates the real subnet host range, and actively probes it with a bounded 48-host worker pool. It never assumes `/24`. UDP probes trigger neighbor resolution, ICMP echo provides the same positive signal available to Terminal `ping`, and short targeted TCP checks add service evidence. A failed ICMP or TCP probe is never treated as proof that a device is offline. Any positive ICMP, TCP, or neighbor observation immediately creates an `Unknown Device`; hostname, MAC, vendor, Bonjour identity, and services enrich that same model asynchronously.
+> No account. No cloud. No router login. Your network observations stay on your Mac.
 
-The neighbor table is re-read after every batch and after the sweep. Loom reads IPv4 link-layer neighbor routes directly through the native macOS routing-table API, with system `arp` parsing as an additional fallback. For a positively reachable host Loom also attempts a scoped lookup, then merges any available MAC into the device that is already on screen. Bonjour/mDNS and reverse-DNS results are merged continuously, so devices appear before the sweep finishes.
+## Highlights
 
-After the first sweep, Bonjour remains active, known devices are checked every 20 seconds, and a bounded active rescan runs at the interval selected in Settings. Subnets up to 4,094 hosts are swept in full; larger enterprise or VPN ranges use a 4,094-host window centered around this Mac, always including the gateway. The UI explicitly labels this safety limit.
+- **Automatic Network Discovery** — Scan the current LAN automatically on launch.
+- **Live Network Map** — Explore devices through a visual network topology.
+- **Device Identification** — Observe IP addresses, MAC addresses, hostnames, device types, and services when available.
+- **Real-Time Monitoring** — Track devices as they appear, disappear, or return to the network.
+- **Device Memory** — Rename, categorize, and remember devices across DHCP address changes.
+- **Trusted Devices** — Mark known devices and quickly review unfamiliar ones.
+- **Service Discovery** — Discover Bonjour/mDNS services and directly observed TCP services.
+- **Activity History** — Keep a local timeline of meaningful network changes.
+- **Privacy First** — No account, cloud backend, router credentials, or router scraping.
 
-## Product behavior
+## Built for macOS
 
-- **Devices:** filters, persistent MAC-aware identity, first/last seen, online state, hostname, observed MAC and MAC type, trust state, and observed services.
-- **Device Inspector:** one shared inspector from Overview, Devices, and Network Map with detected identity, custom naming, IP/MAC/vendor/type, reachability history, services, and trust controls. Custom names are stored separately from detected names and follow the MAC identity across DHCP address changes.
-- **Network Map:** the observed gateway is central; device lines mean shared LAN visibility and do not claim a physical route or access-point topology.
-- **Activity:** locally persisted, de-noised observation events such as first discovery, return, apparent offline state, identity changes, and new services.
-- **Services:** Bonjour results are marked `DISCOVERED`; direct TCP accepts are marked `OPEN`. Loom does not call an open port a vulnerability.
-- **Security:** neutral findings derived from untrusted/new devices and actual service observations.
-- **Settings:** launch scan, monitoring, discovery sources, bounded rescan interval, notifications, privacy, and local-history controls.
+Loom is written natively in **Swift and SwiftUI** and designed specifically for macOS.
 
-Device and activity JSON are stored in `~/Library/Application Support/Loom/`. Preferences use the app's local `UserDefaults`. A locally administered/randomized MAC is deliberately shown with vendor `Unknown`; Loom does not guess a vendor when identity is not reliable.
+**Requirements**
 
-The code keeps SwiftUI views separate from the discovery engine, Bonjour resolver, reachability/service probes, device classifier, settings store, and device/activity repositories. Scan and name-resolution worker pools are bounded, cancellable, and do not block the main actor.
+- macOS 14+
+- Xcode 16+
+- Local Network permission
 
-Debug builds write one detailed, freshly truncated scan trace to `~/Library/Application Support/Loom/scan-debug.log`. It records every generated candidate, attempted probe and mechanism, result, neighbor lookup, hostname resolution, model creation or exact drop reason, identity merge, and SwiftUI publication. Release builds omit this verbose per-address trace.
+## Getting Started
 
-## Build and test
+Clone the repository and open:
+
+```text
+Loom.xcodeproj
+```
+
+Select the **Loom** scheme and press **Run**.
+
+Loom begins discovering the current local network automatically when it launches.
+
+---
+
+## How Discovery Works
+
+Loom determines the active network interface, reads its IPv4 address and subnet mask, calculates the actual subnet, and performs bounded concurrent discovery across the appropriate host range.
+
+Discovery combines multiple observations:
+
+- ICMP reachability
+- Neighbor/ARP information
+- Bonjour/mDNS
+- Reverse DNS
+- Targeted TCP service checks
+
+A failed ICMP or TCP probe is **never treated as proof that a device is offline**.
+
+As soon as Loom obtains a positive observation, the device can appear in the UI. Additional identity information such as hostname, MAC address, vendor, Bonjour identity, and services is resolved asynchronously.
+
+Loom never assumes `/24`.
+
+For unusually large networks, scanning is bounded to prevent accidentally probing tens of thousands of addresses.
+
+## Device Identity
+
+Loom separates **observed identity** from **user-defined identity**.
+
+A device may contain:
+
+- IP address
+- Observed MAC address
+- Hostname
+- Detected device type
+- Vendor when reliably identifiable
+- First and last seen timestamps
+- Observed services
+- User-defined name
+- User-defined category
+- Trusted state
+
+Custom device names are associated with persistent device identity when possible instead of only the current DHCP address.
+
+Locally administered or randomized MAC addresses are preserved and identified as private/local addresses. Loom does not fabricate a vendor when one cannot be reliably determined.
+
+## Network Map
+
+The gateway is presented as the central network node while discovered devices surround it.
+
+Connections in the map represent **shared LAN visibility**, not physical network routes or access-point topology.
+
+Loom deliberately avoids claiming network topology it cannot actually observe.
+
+## Services
+
+Loom distinguishes between two types of service observations:
+
+- `DISCOVERED` — advertised through protocols such as Bonjour/mDNS.
+- `OPEN` — Loom directly observed a TCP connection being accepted.
+
+An open port is not automatically classified as a vulnerability.
+
+## Security
+
+Loom provides a lightweight observational security view for the local network.
+
+It can highlight:
+
+- Newly discovered devices
+- Untrusted devices
+- Newly observed services
+- Locally reachable services
+- Relevant device identity changes
+
+`Untrusted` means the device has **not yet been marked as trusted by the user**. It does not mean the device is malicious.
+
+## Privacy
+
+Loom is local-first.
+
+Device and activity data are stored in:
+
+```text
+~/Library/Application Support/Loom/
+```
+
+Preferences are stored using local `UserDefaults`.
+
+Loom does not require:
+
+- A Loom account
+- Cloud infrastructure
+- Router credentials
+- Router administration access
+- Router-page scraping
+
+## Architecture
+
+The project keeps the SwiftUI presentation layer separate from network discovery and persistence.
+
+Core responsibilities include:
+
+```text
+SwiftUI
+   │
+   ├── Device / Network State
+   │
+Discovery Engine
+   ├── Interface & Subnet Detection
+   ├── Active Discovery
+   ├── Neighbor Resolution
+   ├── Bonjour / mDNS
+   ├── Reachability
+   └── Service Discovery
+   │
+Identity & Monitoring
+   ├── Device Resolution
+   ├── Device Classification
+   ├── Activity Tracking
+   └── Network Monitoring
+   │
+Local Persistence
+```
+
+Scan and name-resolution worker pools are bounded, cancellable, and do not block the main actor.
+
+## Debugging
+
+Debug builds write a detailed scan trace to:
+
+```text
+~/Library/Application Support/Loom/scan-debug.log
+```
+
+The trace records candidate generation, probes, neighbor observations, hostname resolution, identity merging, device creation, filtering, and SwiftUI publication.
+
+Verbose per-address tracing is omitted from Release builds.
+
+## Build & Test
 
 ```sh
 xcodegen generate
-xcodebuild -project Loom.xcodeproj -scheme Loom -destination 'platform=macOS' -derivedDataPath work/DerivedData build
-xcodebuild -project Loom.xcodeproj -scheme Loom -destination 'platform=macOS' -derivedDataPath work/TestDerivedData test
+
+xcodebuild \
+  -project Loom.xcodeproj \
+  -scheme Loom \
+  -destination 'platform=macOS' \
+  -derivedDataPath work/DerivedData \
+  build
+
+xcodebuild \
+  -project Loom.xcodeproj \
+  -scheme Loom \
+  -destination 'platform=macOS' \
+  -derivedDataPath work/TestDerivedData \
+  test
 ```
 
-## Permissions and distribution limits
+## Permissions & Distribution
 
-The app declares `NSLocalNetworkUsageDescription` and the Bonjour service types it browses. macOS may ask for Local Network access on first launch; discovery will be incomplete if the user denies it.
+Loom declares Local Network usage and the Bonjour service types required for discovery.
 
-The active scan launches the system `/sbin/route`, `/sbin/ping`, and `/usr/sbin/arp` utilities to read the default route, observe ICMP replies, and enrich devices from the neighbor table, so App Sandbox is disabled for this V1. If macOS or the launch environment makes a neighbor observation unavailable, Loom keeps the MAC and vendor as `Unknown`; it never invents them and never withholds a device that was otherwise positively observed. A Developer ID distribution can use this architecture, but Mac App Store distribution would require replacing those subprocess-backed observations with approved sandbox-compatible implementations. Loom does not require router credentials and never authenticates to or scrapes a router administration page.
+The current V1 also uses selected macOS system utilities for route, ICMP, and neighbor observations. App Sandbox is therefore disabled in the current architecture.
+
+A Developer ID distribution can use this architecture. Mac App Store distribution would require replacing subprocess-backed functionality with sandbox-compatible implementations.
+
+If macOS prevents an observation, Loom reports that information as unavailable rather than inventing it.
+
+---
+
+### Built with
+
+**Swift · SwiftUI · Network.framework · Bonjour/mDNS**
+
+Designed and built for macOS.
