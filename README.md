@@ -70,6 +70,8 @@ Loom never assumes `/24`.
 For unusually large networks, scanning is bounded to prevent accidentally probing tens of thousands of addresses.
 
 ## Device Identity
+<img width="1920" height="1280" alt="92_1x_shots_so" src="https://github.com/user-attachments/assets/089868f2-4b34-4bd3-bde2-980d22ba1f68" />
+
 
 Loom separates **observed identity** from **user-defined identity**.
 
